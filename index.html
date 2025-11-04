@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TUMAINI Children’s Ministry</title>
+
+<!-- Fonts & icons -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ---------- VARIABLES ---------- */
+:root{
+  --bg-start: #eaf6ff;     /* page background fade start (light blue) */
+  --bg-end:   #ffffff;     /* page background fade end */
+  --section-blue: #0b3a66; /* main deep blue used for text & accents */
+  --section-blue-2:#134f7a;/* secondary blue for gradients */
+  --gold:      #c99b3b;    /* gold accent for waves and buttons */
+  --muted:     #4b6b80;
+  --card-radius: 14px;
+  --max-width: 1200px;
+  --text-dark: #072033;
+}
+
+/* ---------- RESET ---------- */
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Nunito",system-ui,-apple-system,Segoe UI,Roboto,Arial}
+html,body{height:100%}
+body{
+  /* main background image placeholder + gradient overlay */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.65)), /* light fade */
+    url("images/bg2.jpg") center/cover no-repeat fixed;
+  color:var(--text-dark);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  overflow-x:hidden;
+}
+/* Content block transparent blue overlay */
+.section {
+  background: rgba(10, 61, 98, 0.78); /* deep blue, 78% opacity */
+  backdrop-filter: blur(4px); /* makes text readable while showing background */
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 14px;
+  padding: 50px 8%;
+  margin: 40px 0;
+}
+
+/* Wavy gold separators remain above */
+.wave-separator {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background: url("images/wave-gold.svg") repeat-x;
+  background-size: cover;
+}
+
+
+/* ---------- WATERMARK (BG LOGO Placeholder) ---------- */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image: url("images/bglogo.jpg"); /* <-- watermark logo placeholder */
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-size:36%;
+  opacity:0.045;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ---------- LAYOUT / CONTAINER ---------- */
+.wrap{
+  max-width:var(--max-width);
+  margin:18px auto;
+  padding:20px;
+  position:relative;
+  z-index:1;
+}
+
+/* ---------- HEADER ---------- */
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  border-radius:12px;
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 8px 24px rgba(6,28,45,0.06);
+  position: sticky;
+  top:12px;
+  z-index: 60;
+  backdrop-filter: blur(4px);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  font-weight:900;
+  font-size:20px;
+  color:var(--section-blue);
+  cursor:pointer;
+  user-select:none;
+  display:inline-block;
+  transform-origin:center;
+  transition: transform .28s, text-shadow .28s, color .24s;
+}
+/* Logo subtle soft pop animation runs every 5s via JS; keyframes are defined for the .pulse class */
+@keyframes tumainiSoftPop{
+  0%{ transform:translateY(0) scale(1); text-shadow:none; color:var(--section-blue) }
+  30%{ transform:translateY(-8px) scale(1.06); color:var(--gold); text-shadow:0 8px 28px rgba(201,155,59,0.45) }
+  65%{ transform:translateY(-3px) scale(1.03) }
+  100%{ transform:translateY(0) scale(1); text-shadow:none; color:var(--section-blue) }
+}
+.logo.pulse{ animation: tumainiSoftPop 850ms cubic-bezier(.22,.9,.34,1) both }
+
+.brand small{ display:block; font-size:12px; color:var(--muted) }
+
+nav.main{ display:flex; gap:8px; flex-wrap:wrap }
+nav.main a{
+  color:var(--section-blue);
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:10px;
+  font-weight:700;
+  transition: transform .15s, background .15s;
+}
+nav.main a:focus{ outline:2px dashed rgba(11,58,102,0.12) }
+nav.main a:hover{ transform:translateY(-3px); background: linear-gradient(90deg, rgba(201,155,59,0.12), rgba(201,155,59,0.06)) }
+
+/* ---------- PAGE (SPA sections) ---------- */
+section.page{ padding:48px 0; display:none } /* hidden by default */
+section.page.active{ display:block }
+
+/* Card style used inside each page */
+.card{
+  max-width:1100px;
+  margin:0 auto;
+  padding:28px;
+  border-radius:var(--card-radius);
+  box-shadow:0 12px 32px rgba(6,28,45,0.06);
+  background: linear-gradient(180deg,var(--section-blue), var(--section-blue-2));
+  color:#fff;
+  border:2px solid rgba(255,255,255,0.04);
+}
+section.page.gallery .card{ background:#fff; color:var(--text-dark); border:1px solid rgba(6,28,45,0.06) }
+
+.card h1, .card h2, .card h3{ margin:0 0 10px; color:var(--gold) }
+.card p{ margin:0 0 12px; color:rgba(255,255,255,0.92) }
+
+ /* ---------- HOME: What's New + Latest Photos ---------- */
+.columns{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:12px }
+.news{ background:rgba(255,255,255,0.06); padding:12px; border-radius:10px; min-height:100px }
+.news h4{ margin:0 0 6px; color:var(--gold) }
+
+.home-gallery{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px }
+.home-gallery img{ width:100%; height:110px; object-fit:cover; border-radius:8px; border:3px solid rgba(255,255,255,0.06) }
+
+/* ---------- PROGRAM / FUND / GALLERY ---------- */
+.program{ display:flex; gap:14px; margin-top:12px; background:rgba(255,255,255,0.04); padding:12px; border-radius:10px }
+.program img{ width:220px; height:140px; object-fit:cover; border-radius:8px; flex-shrink:0 }
+
+.fund-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px }
+.fund{ background:rgba(255,255,255,0.06); padding:12px; border-radius:10px }
+
+.gallery-grid{ display: flex; flex-wrap: nowrap !important;
+  overflow-x: auto; gap:12px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-top:12px }
+.gallery-thumb{ background:#f7f7f7; border-radius:8px; height:120px; display:flex; align-items:center; justify-content:center; border:2px solid var(--gold); overflow:hidden }
+.gallery-thumb img{ width:100%; height:100%; object-fit:cover }
+.gallery-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  transition: transform 0.25s ease-in-out;
+}
+
+.gallery-thumb:hover {
+  transform: scale(1.4);
+  z-index: 5;
+}
+.gallery-thumb img {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  transition: transform 0.25s ease-in-out;
+}
+
+
+.gallery-thumb {
+  flex: 0 0 auto;
+}
+
+/* ---------- CONTACT & FORM ---------- */
+.contact-form{ margin-top:12px; display:grid; gap:8px }
+input, textarea, select{
+  padding:12px; border-radius:8px; border:2px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); color:#fff;
+}
+.page.gallery input, .page.gallery textarea{ background:#fff; color:var(--text-dark); border:1px solid rgba(6,28,45,0.06) }
+
+/* ---------- BUTTON: gold background with blue text (your choice) ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:10px;
+  background:var(--gold); color:var(--section-blue); font-weight:800; border:none; cursor:pointer;
+}
+.btn:focus{ outline:3px dashed rgba(11,58,102,0.18); outline-offset:4px }
+
+/* ---------- BRUSH-STROKE GOLD WAVE (inside sections) ---------- */
+.wave-brush{ width:100%; height:84px; margin-top:18px; overflow:visible }
+.wave-brush svg{ display:block; width:100%; height:100% }
+
+/* ---------- BOARD OF MANAGEMENT GRID (replaces STAFF) ---------- */
+.staff-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-top:12px }
+.staff-card{ background:#fff; color:#000; padding:14px; border-radius:10px; border-left:6px solid var(--gold) }
+.staff-card img{ width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:10px }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:980px){
+  .columns{ grid-template-columns:repeat(2,1fr) }
+  .home-gallery{ grid-template-columns:repeat(2,1fr) }
+  .program{ flex-direction:column }
+  .program img{ width:100%; height:180px }
+  .fund-grid{ grid-template-columns:1fr }
+}
+@media (max-width:600px){
+  header{ flex-direction:column; align-items:flex-start; gap:8px }
+  .columns{ grid-template-columns:1fr }
+  .home-gallery{ grid-template-columns:1fr }
+  .card{ padding:18px }
+}
+
+/* ---------- ACCESSIBILITY ---------- */
+a:focus, button:focus, input:focus, textarea:focus{ outline:3px dashed rgba(201,155,59,0.36); outline-offset:4px }
+
+/* small helper */
+code{ background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:6px; color:#fff }
+.muted{ color:rgba(255,255,255,0.85); font-weight:700; }
+
+</style>
+</head>
+<body>
+<div class="wrap" role="main">
+
+  <!-- HEADER -->
+  <header role="banner" aria-label="Site header">
+    <div class="brand">
+      <div id="siteLogo" class="logo" tabindex="0" title="Click to go home">TUMAINI Children’s Ministry</div>
+      <div style="font-size:13px;color:var(--muted)">PCEA Riamukurwe Parish — Nyeri</div>
+    </div>
+
+    <nav class="main" role="navigation" aria-label="Primary navigation">
+      <a href="#" data-page="home">Home</a>
+      <a href="#" data-page="about">About</a>
+      <a href="#" data-page="programs">Programs</a>
+      <a href="#" data-page="get-involved">Get Involved</a>
+      <a href="#" data-page="donate">Donate</a>
+      <a href="#" data-page="gallery">Gallery</a>
+      <a href="#" data-page="contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- ================= HOME ================= -->
+  <section id="home" class="page" aria-labelledby="homeTitle">
+    <div class="card" role="region" aria-labelledby="homeTitle">
+      <h1 id="homeTitle">Welcome to Tumaini</h1>
+      <p>We provide shelter, education, healthcare, mentorship and family-strengthening for orphaned & vulnerable children. Tumaini is run under PCEA Riamukurwe Parish and guided by Christian values.</p>
+
+      <!-- WHAT'S NEW (separate block) -->
+      <div style="margin-top:14px" class="page-title"><strong style="color:var(--gold)">What's New</strong></div>
+      <div class="columns whats-new" id="whatsNew">
+        <!-- JS fills these news items (keeps columns layout) -->
+      </div>
+
+      <!-- LATEST PHOTOS (explicitly after What's New) -->
+      <div style="margin-top:18px" class="page-title"><strong style="color:var(--gold)">Latest Photos</strong></div>
+      <div class="home-gallery" id="homeGallery">
+        <!-- JS fills latest photos as thumbnails (after What's New) -->
+      </div>
+
+      <!-- Quick previews -->
+      <div style="margin-top:18px" class="page-title"><strong style="color:var(--gold)">Programs </strong></div>
+      <p>Education sponsorship, vocational skills training (tailoring, plumbing, welding, electrical, ICT), health & nutrition programs, and family-reintegration work.</p>
+      <div style="margin-top:8px"><button class="btn" onclick="navigate('programs')">Explore Programs</button></div>
+
+      <div style="margin-top:18px" class="page-title"><strong style="color:var(--gold)">Support & Donations </strong></div>
+      <p>Donations provide meals, school fees, uniforms, healthcare and help maintain safe facilities.</p>
+      <div style="margin-top:8px"><button class="btn" onclick="navigate('donate')">Donate</button></div>
+
+      <div style="margin-top:18px" class="page-title"><strong style="color:var(--gold)">Get Involved </strong></div>
+      <p>Volunteer, mentor, host a fundraiser or partner with Tumaini to provide training and income opportunities.</p>
+      <div style="margin-top:8px"><button class="btn" onclick="navigate('get-involved')">Get Involved</button></div>
+    </div>
+
+    <div class="wave-brush" aria-hidden="true">
+      <svg viewBox="0 0 1440 84" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40 C180 10 360 80 720 40 C1080 0 1260 80 1440 40" fill="none" stroke="rgba(201,155,59,0.95)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="page" aria-labelledby="aboutTitle">
+    <div class="card" role="region" aria-labelledby="aboutTitle">
+      <h2 id="aboutTitle">About Tumaini Children’s Ministry</h2>
+
+      <h3 style="color:var(--gold);margin-top:8px">Mission</h3>
+      <p class="muted"><strong>To give hope</strong> and build families for children in need through helping them shape their futures and share in community development.</p>
+
+      <h3 style="color:var(--gold);margin-top:12px">Vision</h3>
+      <p class="muted">To ensure every child belongs to a family in a supportive environment and grows with love, respect and security.</p>
+
+      <div style="margin-top:12px">
+        <h3 style="color:var(--gold)">History</h3>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+          <img src="images/h.jpg" alt="History" style="width:320px;border-radius:10px;flex-shrink:0">
+          <div style="flex:1">
+            <p style="color:rgba(255,255,255,0.92)">
+              P.C.E.A Tumaini children’s ministry comprises Tumaini and Huruma children’s home, an institution of Presbyterian Church of East Africa Riamukurwe Parish being part of the mission work addressing the needy persons especially the child welfare, including feeding, clothing, medical and education. These are children from normal homes experiencing economic, emotional, and social upheavals. The idea is to provide transient support to enable the children under those unfortunate circumstances achieve meaning in their lives particularly elementary and secondary education.
+            </p>
+            <p style="color:rgba(255,255,255,0.92)">
+              Since its foundation the ministry expanded from short-term parish outreach to a structured program delivering shelter, schooling, vocational skills training, and family strengthening. Through partners and parish governance Tumaini aims to prepare children for independent, productive lives while preserving their dignity and wellbeing.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOARD OF MANAGEMENT: placeholders as requested -->
+      <div style="margin-top:18px">
+        <h3 style="color:var(--gold)">Board of Management</h3>
+        <div class="staff-grid">
+          <div class="staff-card">
+            <img src="images/s.jpg" alt="Board Member placeholder">
+            <strong>Virginia Munyiri</strong>
+            <p style="color:rgba(0,0,0,0.7);margin-top:8px">Secretary— Governance & oversight</p>
+          </div>
+          <div class="staff-card">
+            <img src="images/s2.jpg" alt="Board Member placeholder">
+            <strong>Eunice Kago</strong>
+            <p style="color:rgba(0,0,0,0.7);margin-top:8px">Vice Secretary</p>
+          </div>
+          <div class="staff-card">
+            <img src="images/s3.jpg" alt="Board Member placeholder">
+            <strong>Board Members</strong>
+            <p style="color:rgba(0,0,0,0.7);margin-top:8px">Board of Manangement</p>
+          </div>
+          <!-- Third photo card removed as requested; replaced by names-only placeholders below -->
+        </div>
+
+        <!-- Name-only placeholders for 5 board members (including those above if you wish) -->
+        <div style="margin-top:12px;background:rgba(255,255,255,0.06);padding:12px;border-radius:10px">
+          <strong style="color:var(--gold)">Board Members</strong>
+          <ul style="color:rgba(255,255,255,0.95);margin-left:18px;margin-top:8px">
+            <li><b>Rev. James Mbarachu - Oversee all operations</b></li>
+            <li><b>Beth Ngari - Treasurer </b></li>
+            <li><b>Joseph Waweru - Member</b></li>
+            <li><b>Hillary Wachira - Session clerk</b></li>
+            <li><b>Maragaret Mwangi - Member</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:18px">
+        <h3 style="color:var(--gold)">Facilities</h3>
+        <ul style="color:rgba(255,255,255,0.95);margin-left:18px;margin-top:8px">
+          <li>Children's dormitories (separate boys & girls units)</li>
+          <li>Dining hall and kitchen</li>
+          <li>Classrooms and study center</li>
+          <li>Skills training workshop (tailoring, plumbing, welding, electrical, ICT)</li>
+          <li>Playground and sports fields</li>
+          <li>Health & counseling room</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:18px">
+        <h3 style="color:var(--gold)">Governance & Safeguarding</h3>
+        <p class="muted">The children’s ministry is owned by PCEA Riamukurwe Parish. A Board of Management and Parish Session oversee governance. All staff sign a code of conduct and follow child protection policies; safeguarding procedures are implemented and available on request.</p>
+      </div>
+    </div>
+
+    <div class="wave-brush" aria-hidden="true">
+      <svg viewBox="0 0 1440 84" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40 C180 80 360 10 720 40 C1080 70 1260 10 1440 40" fill="none" stroke="rgba(201,155,59,0.95)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= PROGRAMS ================= -->
+  <section id="programs" class="page" aria-labelledby="programsTitle">
+    <div class="card" role="region" aria-labelledby="programsTitle">
+      <h2 id="programsTitle">Programs</h2>
+
+      <div class="program">
+        <img src="images/w2.jpg" alt="Shelter">
+        <div><h3 style="color:var(--gold)">Shelter & Care</h3><p>Daily routines, psychosocial support and safe dormitory living with trained caregivers.</p></div>
+      </div>
+
+      <div class="program">
+        <img src="images/p10.jpg" alt="Education">
+        <div><h3 style="color:var(--gold)">Education Support</h3><p>School fees, uniforms, tutoring, library access and exam preparation.</p></div>
+      </div>
+
+      <div class="program">
+        <img src="images/g8.jpg" alt="Vocational">
+        <div><h3 style="color:var(--gold)">Vocational Skills</h3><p>Tailoring, welding, plumbing, electrical and ICT training — with income-generation projects.</p></div>
+      </div>
+
+      <div class="program">
+        <img src="images/p9.jpg" alt="Health">
+        <div><h3 style="color:var(--gold)">Health & Nutrition</h3><p>Balanced meals from farm produce, routine checks and referrals to local clinics.</p></div>
+      </div>
+
+      <div class="program">
+        <img src="images/g14.jpg" alt="Family">
+        <div><h3 style="color:var(--gold)">Family Strengthening</h3><p>Tracing, counselling and reintegration where safe — target reintegration of at least five children per quarter.</p></div>
+      </div>
+
+    </div>
+
+    <div class="wave-brush" aria-hidden="true">
+      <svg viewBox="0 0 1440 84" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40 C200 10 380 80 720 40 C1060 0 1240 80 1440 40" fill="none" stroke="rgba(201,155,59,0.95)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= GET INVOLVED ================= -->
+  <section id="get-involved" class="page" aria-labelledby="getInvolvedTitle">
+    <div class="card" role="region" aria-labelledby="getInvolvedTitle">
+      <h2 id="getInvolvedTitle">Get Involved</h2>
+      <p>There are several meaningful ways to support Tumaini. Below are clear steps, expectations, and how your involvement helps.</p>
+
+      <h3 style="color:var(--gold);margin-top:12px">Volunteer</h3>
+      <p class="muted">Short-term volunteers help with tutoring, activities and events. Long-term volunteers may support program coordination, administration or training. Volunteers attend a brief induction and child protection orientation before working with children.</p>
+
+      <h3 style="color:var(--gold);margin-top:10px">Sponsor a Child</h3>
+      <p class="muted">Sponsorship covers school fees, uniforms, basic medical care and pocket funds. Sponsors receive termly progress reports and (where appropriate) photos and updates.</p>
+
+      <h3 style="color:var(--gold);margin-top:10px">Partner & Corporate Support</h3>
+      <p class="muted">Local businesses, churches, and NGOs can partner on projects (workshop builds, vocational training, school fee drives). Partners receive impact reports and recognition in our communications.</p>
+
+      <div style="margin-top:12px">
+        <h3 style="color:var(--gold)">What we ask from volunteers/partners</h3>
+        <ul style="color:rgba(255,255,255,0.92);margin-left:18px">
+          <li>Commitment to child safeguarding and ministry rules</li>
+          <li>Attendance at orientation sessions</li>
+          <li>Respect for staff direction and community norms</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:12px">
+        <button class="btn" onclick="alert('Register interest demo — in real deployment we will capture your contact details.')">Register Interest (demo)</button>
+      </div>
+    </div>
+
+    <div class="wave-brush" aria-hidden="true">
+      <svg viewBox="0 0 1440 84" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40 C200 80 380 10 720 40 C1060 70 1240 10 1440 40" fill="none" stroke="rgba(201,155,59,0.95)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= DONATE ================= -->
+  <section id="donate" class="page" aria-labelledby="donateTitle">
+    <div class="card" role="region" aria-labelledby="donateTitle">
+      <h2 id="donateTitle">Donate</h2>
+      <p>Your donations support daily operations and long-term projects — education, nutrition, healthcare and skills training. We aim for transparency and send donors simple impact summaries.</p>
+
+      <div style="margin-top:12px">
+        <h3 style="color:var(--gold)">Suggested Donation Uses</h3>
+        <ul style="color:rgba(255,255,255,0.92);margin-left:18px">
+          <li>KES 2,000 / month — support a child's school essentials</li>
+          <li>KES 5,000 — monthly meals for the home</li>
+          <li>KES 15,000 — vocational workshop supplies (per term)</li>
+          <li>One-off donations — building repairs, mattresses, or medical emergencies</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:12px">
+        <h3 style="color:var(--gold)">Payment Options (choose what works for you)</h3>
+        <div class="fund-grid">
+          <div class="fund"><strong>Bank Transfer</strong><p class="muted">Bank: [Bank Name] — Account: Tumaini Children’s Ministry — Account No: 1234567890 (fill real details)</p></div>
+          <div class="fund"><strong>M-Pesa</strong><p class="muted">Paybill: 123456 — Account: TUMAINI (use your phone number as reference)</p></div>
+          <div class="fund"><strong>PayPal</strong><p class="muted">pceariamktumainichildrenshome@gmail.com</p></div>
+          <div class="fund"><strong>Card (Stripe/Pay)</strong><p class="muted">We can integrate a card processor — provide Stripe/PayPal merchant details for online card payments.</p></div>
+          <div class="fund"><strong>Physical Goods</strong><p class="muted">Donations of food, clothes, mattresses and school supplies are welcome — arrange drop-off with the office.</p></div>
+          <div class="fund"><strong>Goodwill or Other Platforms</strong><p class="muted">Provide Goodwill or other platform links and we'll add direct buttons and instructions.</p></div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <p class="muted">When you donate: include your name & purpose (sponsorship, general fund, supplies). We will acknowledge receipt and include you in the mailing list for impact reports if you opt in.</p>
+        <button class="btn" id="donateDemo"><i class="fa fa-hand-holding-heart"></i> Donate (demo)</button>
+      </div>
+    </div>
+
+    <div class="wave-brush" aria-hidden="true">
+      <svg viewBox="0 0 1440 84" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40 C140 10 360 80 720 40 C1080 0 1260 80 1440 40" fill="none" stroke="rgba(201,155,59,0.95)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= GALLERY ================= -->
+  <section id="gallery" class="page gallery" aria-labelledby="galleryTitle">
+    <div class="card" role="region" aria-labelledby="galleryTitle">
+      <h2 id="galleryTitle">Gallery (classified)</h2>
+      <p class="muted">Photos grouped by category. Replace placeholder thumbnails with real images by adding files to the <code>images/</code> folder and updating the <code>galleryData</code> object at the bottom of this file.</p>
+
+      <div style="margin-top:12px">
+        <h3 style="margin-top:12px">Sponsors (10)</h3>
+<div class="gallery-grid" id="sponsorsGrid">
+  <div class="gallery-thumb">
+    <img src="images/w3.jpg" alt="Sponsor 1" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/s.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/w1.jpg" alt="Sponsor 3" />
+  </div>
+</div>
+
+        <h3 style="margin-top:12px">Staff (10)</h3>
+        <div class="gallery-grid" id="staffGrid"> 
+        <div class="gallery-thumb">
+    <img src="images/g6.jpg" alt="Sponsor 1" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/s3.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/g8.jpg" alt="Sponsor 3" />
+  </div>
+  </div>
+
+        <h3 style="margin-top:12px">Children & Activities (10)</h3>
+        <div class="gallery-grid" id="childrenGrid">
+          <div class="gallery-thumb">
+    <img src="images/bg.jpg" alt="Sponsor 1" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/bg2.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/g3.jpg" alt="Sponsor 3" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/g4.jpg" alt="Sponsor 1" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/g5.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/g7.jpg" alt="Sponsor 3" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/g10.jpg" alt="Sponsor 1" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/w.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p7.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/g16.jpg" alt="Sponsor 2" />
+  </div>
+  </div>
+      
+
+        <h3 style="margin-top:12px">Programs (10)</h3>
+        <div class="gallery-grid" id="progGrid">
+          <div class="gallery-thumb">
+    <img src="images/w.jpg" alt="Sponsor 2" />
+  </div><div class="gallery-thumb">
+    <img src="images/w.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p1.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p2.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p3.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p4.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p5.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p6.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p7.jpg" alt="Sponsor 2" />
+  </div>
+  <div class="gallery-thumb">
+    <img src="images/p8.jpg" alt="Sponsor 2" />
+  </div>
+    </div>
+    </div>
+
+    <div class="wave-brush" aria-hidden="true">
+      <svg viewBox="0 0 1440 84" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40 C200 80 400 10 720 40 C1040 80 1240 10 1440 40" fill="none" stroke="rgba(201,155,59,0.95)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section id="contact" class="page" aria-labelledby="contactTitle">
+    <div class="card" role="region" aria-labelledby="contactTitle">
+      <h2 id="contactTitle">Contact Us</h2>
+      <p>Visit or reach out for sponsorships, volunteering, partnerships or general enquiries.</p>
+
+      <form id="contactForm" class="contact-form" novalidate>
+        <input name="name" placeholder="Full name" required aria-label="Full name">
+        <input name="email" type="email" placeholder="Email address" required aria-label="Email address">
+        <input name="subject" placeholder="Subject" aria-label="Subject">
+        <textarea name="message" rows="6" placeholder="Message / feedback" required aria-label="Message"></textarea>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button type="reset" class="btn" style="background:transparent;color:var(--section-blue);border:2px solid var(--gold)">Reset</button>
+          <button type="submit" class="btn">Send Message</button>
+        </div>
+      </form>
+
+      <div style="margin-top:14px;color:rgba(255,255,255,0.9)">
+        <strong>Location:</strong> Nyeri, Kenya &nbsp; • &nbsp; <strong>Email:</strong> pceariamktumainichildrenshome@gmail.com &nbsp; • &nbsp; <strong>Phone:</strong> 0705 000000
+      </div>
+    </div>
+
+    <div class="wave-brush" aria-hidden="true">
+      <svg viewBox="0 0 1440 84" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40 C140 10 360 80 720 40 C1080 10 1260 80 1440 40" fill="none" stroke="rgba(201,155,59,0.95)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="text-align:center;margin-top:18px;color:var(--muted);font-size:14px">
+    &copy; <span id="year"></span> TUMAINI Children’s Ministry — PCEA Riamukurwe Parish. All rights reserved.
+  </footer>
+</div>
+
+<!-- ================= SCRIPTS (all in one file per your request) ================= -->
+<script>
+/* ---------- SPA: simple routing (show one section at a time) ---------- */
+(function(){
+  const pages = document.querySelectorAll('section.page');
+  function show(id){
+    pages.forEach(s => s.classList.toggle('active', s.id === id));
+    const activeCard = document.querySelector('section.page.active .card');
+    if(activeCard) activeCard.focus?.();
+    history.replaceState({}, '', '#' + id);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  // initial
+  const start = location.hash ? location.hash.replace('#','') : 'home';
+  show(start);
+
+  // nav links
+  document.querySelectorAll('a[data-page]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      const p = a.dataset.page; if(p) show(p);
+    });
+  });
+
+  // add global navigate function used by some buttons
+  window.navigate = function(page){ show(page); }
+})();
+
+/* ---------- Logo animation: soft pop every 5 seconds ---------- */
+(function(){
+  const logo = document.getElementById('siteLogo');
+  function doPulse(){
+    logo.classList.remove('pulse');
+    void logo.offsetWidth; // reflow to restart animation
+    logo.classList.add('pulse');
+  }
+  doPulse();
+  setInterval(doPulse, 5000);
+  logo.addEventListener('click', ()=> location.hash = '#home');
+  logo.addEventListener('keydown', e=> { if(e.key==='Enter') location.hash = '#home' });
+})();
+
+/* ---------- Data for gallery & what's new (edit to update site) ---------- */
+const galleryData = {
+  whatsNew: [
+    {title:'New Dorm Opening', body:'We opened a new dormitory for older children, improving study space and privacy.'},
+    {title:'School Sponsorship Drive', body:'Supporters raised funds for uniforms & school fees for 25 children this term.'},
+    {title:'Vocational Showcase', body:'Students presented tailoring and carpentry projects to the community.'}
+  ],
+  home: ['images/w.jpg','images/w1.jpg','images/w2.jpg','images/w3.jpg'], // newest first
+  facilities: Array.from({length:10},(_,i)=>`images/fac${i+1}.jpg`),
+  sponsors: Array.from({length:10},(_,i)=>`images/spon${i+1}.jpg`),
+  staff: Array.from({length:10},(_,i)=>`images/st${i+1}.jpg`),
+  children: Array.from({length:10},(_,i)=>`images/child${i+1}.jpg`),
+  programs: Array.from({length:10},(_,i)=>`images/prog${i+1}.jpg`)
+};
+
+/* ---------- small helper ---------- */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- Load What's New (as columns) ---------- */
+function loadWhatsNew(){
+  const c = document.getElementById('whatsNew');
+  c.innerHTML = '';
+  // If you want the latest photo to be visible separately, we keep photos out of the news list.
+  galleryData.whatsNew.forEach(n=>{
+    const d = document.createElement('div'); d.className = 'news';
+    d.innerHTML = `<h4>${escapeHtml(n.title)}</h4><div style="color:rgba(255,255,255,0.92);font-weight:700">${escapeHtml(n.body)}</div>`;
+    c.appendChild(d);
+  });
+}
+
+/* ---------- Load Home Gallery (this is the "Latest Photos" section AFTER what's new) ---------- */
+function loadHomeGallery(){
+  const g = document.getElementById('homeGallery'); g.innerHTML = '';
+  (galleryData.home || []).forEach(src=>{
+    const img = document.createElement('img'); img.src = src; img.alt = src.split('/').pop();
+    img.addEventListener('error', ()=> img.src = placeholderSvg('Replace with your image'));
+    g.appendChild(img);
+  });
+}
+
+/* ---------- Populate classified gallery grids ---------- */
+/* ---------- initial population ---------- */
+loadWhatsNew(); loadHomeGallery(); populateGallery();
+
+/* ---------- Donate demo handler ---------- */
+document.getElementById('donateDemo')?.addEventListener('click', ()=> alert('Demo Donate: paste Goodwill/PayPal/MPesa details if you want a live button wired up.')) ;
+
+/* ---------- Contact form demo ---------- */
+document.getElementById('contactForm')?.addEventListener('submit', function(e){
+  e.preventDefault();
+  alert('Thank you — your message was received (demo). To send real messages integrate a backend or email service.');
+  e.target.reset();
+});
+
+/* ---------- set year in footer ---------- */
+document.getElementById('year').textContent = (new Date()).getFullYear();
+</script>
+</body>
+</html>
