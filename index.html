@@ -157,38 +157,45 @@ section.page.gallery .card{ background:#fff; color:var(--text-dark); border:1px 
 .home-gallery{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px }
 .home-gallery img{ width:100%; height:110px; object-fit:cover; border-radius:8px; border:3px solid rgba(255,255,255,0.06) }
 
-/* ---------- PROGRAM / FUND / GALLERY ---------- */
 .program{ display:flex; gap:14px; margin-top:12px; background:rgba(255,255,255,0.04); padding:12px; border-radius:10px }
 .program img{ width:220px; height:140px; object-fit:cover; border-radius:8px; flex-shrink:0 }
 
+/* ---------- FUND / GALLERY ---------- */
 .fund-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px }
 .fund{ background:rgba(255,255,255,0.06); padding:12px; border-radius:10px }
 
-.gallery-grid{ display: flex; flex-wrap: nowrap !important;
-  overflow-x: auto; gap:12px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-top:12px }
-.gallery-thumb{ background:#f7f7f7; border-radius:8px; height:120px; display:flex; align-items:center; justify-content:center; border:2px solid var(--gold); overflow:hidden }
-.gallery-thumb img{ width:100%; height:100%; object-fit:cover }
-.gallery-thumb {
-  position: relative;
-  flex: 0 0 auto;
+/* Make gallery rows horizontally scrollable and keep thumbs stable */
+.gallery-grid{
+  display:flex;
+  flex-wrap:nowrap !important;
+  overflow-x:auto;
+  gap:12px;
+  margin-top:12px;
+  padding-bottom:6px;
+}
+.gallery-thumb{
+  background:#f7f7f7;
+  border-radius:8px;
+  height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid var(--gold);
+  overflow:hidden;
+  position:relative;
+  flex:0 0 auto;
   transition: transform 0.25s ease-in-out;
 }
-
-.gallery-thumb:hover {
-  transform: scale(1.4);
-  z-index: 5;
-}
-.gallery-thumb img {
-  width: 200px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 6px;
+.gallery-thumb img{
+  width:200px;
+  height:150px;
+  object-fit:cover;
+  border-radius:6px;
   transition: transform 0.25s ease-in-out;
 }
-
-
-.gallery-thumb {
-  flex: 0 0 auto;
+.gallery-thumb:hover{
+  transform: scale(1.35);
+  z-index: 40;
 }
 
 /* ---------- CONTACT & FORM ---------- */
@@ -233,10 +240,54 @@ input, textarea, select{
 /* ---------- ACCESSIBILITY ---------- */
 a:focus, button:focus, input:focus, textarea:focus{ outline:3px dashed rgba(201,155,59,0.36); outline-offset:4px }
 
-/* small helper */
 code{ background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:6px; color:#fff }
 .muted{ color:rgba(255,255,255,0.85); font-weight:700; }
 
+/* ---------- LIGHTBOX styles (keeps on top) ---------- */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  padding: 20px;
+}
+.lightbox .inner {
+  position: relative;
+  max-width: 96%;
+  max-height: 96%;
+}
+.lightbox img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+.lightbox .close-btn{
+  position:absolute;
+  top:-18px;
+  right:-18px;
+  background:var(--gold);
+  border-radius:50%;
+  width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  font-weight:900;
+  z-index:1000000;
+}
+.lightbox .caption{
+  margin-top:8px;
+  color: #fff;
+  text-align:center;
+  font-weight:700;
+}
 </style>
 </head>
 <body>
@@ -342,9 +393,8 @@ code{ background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:6px; col
           <div class="staff-card">
             <img src="images/s3.jpg" alt="Board Member placeholder">
             <strong>Board Members</strong>
-            <p style="color:rgba(0,0,0,0.7);margin-top:8px">Board of Manangement</p>
+            <p style="color:rgba(0,0,0,0.7);margin-top:8px">Board of Management</p>
           </div>
-          <!-- Third photo card removed as requested; replaced by names-only placeholders below -->
         </div>
 
         <!-- Name-only placeholders for 5 board members (including those above if you wish) -->
@@ -524,47 +574,47 @@ code{ background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:6px; col
         <h3 style="margin-top:12px">Staff (10)</h3>
         <div class="gallery-grid" id="staffGrid"> 
         <div class="gallery-thumb">
-    <img src="images/g6.jpg" alt="Sponsor 1" />
+    <img src="images/g6.jpg" alt="Staff 1" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/s3.jpg" alt="Sponsor 2" />
+    <img src="images/s3.jpg" alt="Staff 2" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/g8.jpg" alt="Sponsor 3" />
+    <img src="images/g8.jpg" alt="Staff 3" />
   </div>
   </div>
 
         <h3 style="margin-top:12px">Children & Activities (10)</h3>
         <div class="gallery-grid" id="childrenGrid">
           <div class="gallery-thumb">
-    <img src="images/bg.jpg" alt="Sponsor 1" />
+    <img src="images/bg.jpg" alt="Activity 1" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/bg2.jpg" alt="Sponsor 2" />
+    <img src="images/bg2.jpg" alt="Activity 2" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/g3.jpg" alt="Sponsor 3" />
+    <img src="images/g3.jpg" alt="Activity 3" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/g4.jpg" alt="Sponsor 1" />
+    <img src="images/g4.jpg" alt="Activity 4" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/g5.jpg" alt="Sponsor 2" />
+    <img src="images/g5.jpg" alt="Activity 5" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/g7.jpg" alt="Sponsor 3" />
+    <img src="images/g7.jpg" alt="Activity 6" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/g10.jpg" alt="Sponsor 1" />
+    <img src="images/g10.jpg" alt="Activity 7" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/w.jpg" alt="Sponsor 2" />
+    <img src="images/w.jpg" alt="Activity 8" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p7.jpg" alt="Sponsor 2" />
+    <img src="images/p7.jpg" alt="Activity 9" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/g16.jpg" alt="Sponsor 2" />
+    <img src="images/g16.jpg" alt="Activity 10" />
   </div>
   </div>
       
@@ -572,36 +622,36 @@ code{ background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:6px; col
         <h3 style="margin-top:12px">Programs (10)</h3>
         <div class="gallery-grid" id="progGrid">
           <div class="gallery-thumb">
-    <img src="images/w.jpg" alt="Sponsor 2" />
+    <img src="images/w.jpg" alt="Program 1" />
   </div><div class="gallery-thumb">
-    <img src="images/w.jpg" alt="Sponsor 2" />
+    <img src="images/w.jpg" alt="Program 2" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p.jpg" alt="Sponsor 2" />
+    <img src="images/p.jpg" alt="Program 3" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p1.jpg" alt="Sponsor 2" />
+    <img src="images/p1.jpg" alt="Program 4" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p2.jpg" alt="Sponsor 2" />
+    <img src="images/p2.jpg" alt="Program 5" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p3.jpg" alt="Sponsor 2" />
+    <img src="images/p3.jpg" alt="Program 6" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p4.jpg" alt="Sponsor 2" />
+    <img src="images/p4.jpg" alt="Program 7" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p5.jpg" alt="Sponsor 2" />
+    <img src="images/p5.jpg" alt="Program 8" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p6.jpg" alt="Sponsor 2" />
+    <img src="images/p6.jpg" alt="Program 9" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p7.jpg" alt="Sponsor 2" />
+    <img src="images/p7.jpg" alt="Program 10" />
   </div>
   <div class="gallery-thumb">
-    <img src="images/p8.jpg" alt="Sponsor 2" />
+    <img src="images/p8.jpg" alt="Program 11" />
   </div>
     </div>
     </div>
@@ -646,6 +696,15 @@ code{ background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:6px; col
   <footer style="text-align:center;margin-top:18px;color:var(--muted);font-size:14px">
     &copy; <span id="year"></span> TUMAINI Children’s Ministry — PCEA Riamukurwe Parish. All rights reserved.
   </footer>
+</div>
+
+<!-- ================= LIGHTBOX Viewer (kept at bottom) ================= -->
+<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
+  <div class="inner" role="document">
+    <div class="close-btn" aria-label="Close preview" title="Close">✕</div>
+    <img id="lightbox-img" src="" alt="Preview">
+    <div class="caption" id="lightbox-caption" aria-hidden="true"></div>
+  </div>
 </div>
 
 <!-- ================= SCRIPTS (all in one file per your request) ================= -->
@@ -711,8 +770,8 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<
 /* ---------- Load What's New (as columns) ---------- */
 function loadWhatsNew(){
   const c = document.getElementById('whatsNew');
+  if(!c) return;
   c.innerHTML = '';
-  // If you want the latest photo to be visible separately, we keep photos out of the news list.
   galleryData.whatsNew.forEach(n=>{
     const d = document.createElement('div'); d.className = 'news';
     d.innerHTML = `<h4>${escapeHtml(n.title)}</h4><div style="color:rgba(255,255,255,0.92);font-weight:700">${escapeHtml(n.body)}</div>`;
@@ -722,17 +781,50 @@ function loadWhatsNew(){
 
 /* ---------- Load Home Gallery (this is the "Latest Photos" section AFTER what's new) ---------- */
 function loadHomeGallery(){
-  const g = document.getElementById('homeGallery'); g.innerHTML = '';
+  const g = document.getElementById('homeGallery');
+  if(!g) return;
+  // If user already put images in HTML, don't duplicate — only fill when empty
+  if(g.children.length > 0) return;
   (galleryData.home || []).forEach(src=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'gallery-thumb';
     const img = document.createElement('img'); img.src = src; img.alt = src.split('/').pop();
     img.addEventListener('error', ()=> img.src = placeholderSvg('Replace with your image'));
-    g.appendChild(img);
+    wrap.appendChild(img);
+    g.appendChild(wrap);
   });
 }
 
-/* ---------- Populate classified gallery grids ---------- */
+/* ---------- Populate classified gallery grids (only when empty) ---------- */
+function populateGallery(){
+  function fillIfEmpty(id, arr){
+    const c = document.getElementById(id);
+    if(!c || c.children.length>0) return; // keep user-provided markup
+    (arr || []).forEach(src=>{
+      const div = document.createElement('div'); div.className = 'gallery-thumb';
+      const img = document.createElement('img'); img.src = src; img.alt = src.split('/').pop();
+      img.addEventListener('error', ()=> img.src = placeholderSvg('Replace image'));
+      div.appendChild(img); c.appendChild(div);
+    });
+  }
+  fillIfEmpty('facilitiesGrid', galleryData.facilities);
+  fillIfEmpty('sponsorsGrid', galleryData.sponsors);
+  fillIfEmpty('staffGrid', galleryData.staff);
+  fillIfEmpty('childrenGrid', galleryData.children);
+  fillIfEmpty('progGrid', galleryData.programs);
+}
+
+/* ---------- placeholder SVG generator for missing images ---------- */
+function placeholderSvg(text){
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect fill="#f0f4fb" width="100%" height="100%"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#8599aa" font-family="Arial" font-size="14">${text}</text></svg>`
+  );
+}
+
 /* ---------- initial population ---------- */
-loadWhatsNew(); loadHomeGallery(); populateGallery();
+loadWhatsNew();
+loadHomeGallery();
+populateGallery();
 
 /* ---------- Donate demo handler ---------- */
 document.getElementById('donateDemo')?.addEventListener('click', ()=> alert('Demo Donate: paste Goodwill/PayPal/MPesa details if you want a live button wired up.')) ;
@@ -747,5 +839,74 @@ document.getElementById('contactForm')?.addEventListener('submit', function(e){
 /* ---------- set year in footer ---------- */
 document.getElementById('year').textContent = (new Date()).getFullYear();
 </script>
+
+<script>
+/*
+  Lightbox + event delegation (works with dynamically added images)
+  Behavior:
+   - Clicking an image in home-gallery, any gallery-grid, or program images opens the lightbox
+   - Click the dark backdrop or the close button (✕) to close
+   - Press Escape to close
+   - Body scroll is locked while lightbox is open
+*/
+document.addEventListener('DOMContentLoaded', () => {
+  const lightbox = document.getElementById('lightbox');
+  const lightImg = document.getElementById('lightbox-img');
+  const caption = document.getElementById('lightbox-caption');
+  const closeBtn = lightbox.querySelector('.close-btn');
+
+  function openLightbox(src, alt){
+    if(!lightbox || !lightImg) return;
+    lightImg.src = src;
+    lightImg.alt = alt || '';
+    caption.textContent = alt || '';
+    lightbox.style.display = 'flex';
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; // prevent background scroll
+  }
+  function closeLightbox(){
+    if(!lightbox || !lightImg) return;
+    lightbox.style.display = 'none';
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightImg.src = '';
+    caption.textContent = '';
+    document.body.style.overflow = '';
+  }
+
+  // Delegated click handler on document body
+  document.body.addEventListener('click', (e) => {
+    const clicked = e.target;
+    // If clicked the close button, close
+    if (clicked === closeBtn) { closeLightbox(); return; }
+
+    // If clicked inside the lightbox but not on the image (i.e., backdrop), close
+    if (clicked === lightbox) { closeLightbox(); return; }
+
+    // If clicked an image that is inside a gallery-grid, home-gallery, or program block -> open
+    const img = clicked.closest ? clicked.closest('img') : null;
+    if (!img) return;
+
+    // Check whether the image lives in a place we want (home-gallery, any .gallery-grid, or .program)
+    const inHome = img.closest('.home-gallery');
+    const inGalleryRow = img.closest('.gallery-grid') || img.closest('.gallery-thumb');
+    const inProgram = img.closest('.program');
+    const inCardGallerySection = img.closest('section.page.gallery');
+
+    if (inHome || inGalleryRow || inProgram || inCardGallerySection) {
+      openLightbox(img.src, img.alt || '');
+      e.preventDefault();
+      return;
+    }
+  });
+
+  // Close on Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // also click the close button area (already bound above)
+});
+</script>
+
 </body>
 </html>
